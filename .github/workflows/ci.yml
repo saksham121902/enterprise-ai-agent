@@ -28,7 +28,8 @@ jobs:
 
       - name: Run Ruff Lint Check
         run: |
-          ruff check backend/ tests/ --exit-non-zero-on-fix=false
+          ruff check backend/ tests/
+
 
       - name: Run Ruff Format Check
         run: |

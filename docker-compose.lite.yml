@@ -1,0 +1,112 @@
+# =============================================================================
+# Enterprise AI Operations Agent — Lite Mode Compose
+# =============================================================================
+#
+# Minimal footprint for local demo, portfolio evaluation, or low-RAM deployment.
+# Runs ONLY:
+#   1. PostgreSQL 16 (metadata & state)
+#   2. ChromaDB (vector embeddings for RAG)
+#   3. FastAPI Backend (with in-memory cache & inline BackgroundTasks)
+#   4. React Frontend (Vite + Nginx on port 3000)
+#
+# Optional services (Redis, Celery, Neo4j, Jaeger, Loki, Grafana) are DISABLED.
+#
+# Usage:
+#   docker compose -f docker-compose.lite.yml up --build
+#
+# =============================================================================
+
+services:
+  # ── PostgreSQL ─────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: enterprise-ai-postgres-lite
+    environment:
+      POSTGRES_DB: enterprise_ai
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_lite_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d enterprise_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── ChromaDB (Vector Store) ────────────────────────────────────────────────
+  chromadb:
+    image: chromadb/chroma:0.5.5
+    container_name: enterprise-ai-chromadb-lite
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_lite_data:/chroma/chroma
+    restart: unless-stopped
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+
+  # ── FastAPI Backend (Lite Mode) ────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: enterprise-ai-backend-lite
+    ports:
+      - "8000:8000"
+    environment:
+      - LITE_MODE=true
+      - DEMO_MODE=true
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+      - LOG_FORMAT=json
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres_password@postgres:5432/enterprise_ai
+      - CHROMADB_HOST=chromadb
+      - CHROMADB_PORT=8000
+      - SECRET_KEY=lite-demo-secret-key-replace-in-production-min-32-chars
+      - CORS_ORIGINS=["http://localhost:3000","http://127.0.0.1:3000","http://localhost:8000"]
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      - PRIMARY_PROVIDER=${PRIMARY_PROVIDER:-openai}
+      - DEMO_RATE_LIMIT_PER_IP=30
+      - DEMO_RATE_LIMIT_WINDOW_SECONDS=60
+      - DEMO_DAILY_TOKEN_BUDGET=100000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - upload_lite_data:/app/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # ── Frontend (React + Vite + Nginx) ────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: enterprise-ai-frontend-lite
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  postgres_lite_data:
+  chroma_lite_data:
+  upload_lite_data:

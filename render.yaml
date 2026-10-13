@@ -1,0 +1,81 @@
+# =============================================================================
+# Enterprise AI Operations Agent — Render Blueprint
+# =============================================================================
+# Deploy the full stack (FastAPI Backend + PostgreSQL + React Frontend)
+# to Render in a single click using this blueprint.
+#
+# Steps:
+# 1. Fork or push this repository to GitHub
+# 2. Go to https://dashboard.render.com/blueprints
+# 3. Click "New Blueprint Instance" and select your repository
+# 4. Fill in LLM API key (OPENAI_API_KEY, GEMINI_API_KEY, etc.)
+# 5. Click Apply
+# =============================================================================
+
+services:
+  # ── Backend API ────────────────────────────────────────────────────────────
+  - type: web
+    name: enterprise-ai-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      - key: LITE_MODE
+        value: "true"
+      - key: DEMO_MODE
+        value: "true"
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: LOG_FORMAT
+        value: json
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: enterprise-ai-db
+          property: connectionString
+      - key: PRIMARY_PROVIDER
+        value: openai
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: DEMO_RATE_LIMIT_PER_IP
+        value: "30"
+      - key: DEMO_RATE_LIMIT_WINDOW_SECONDS
+        value: "60"
+      - key: DEMO_DAILY_TOKEN_BUDGET
+        value: "100000"
+
+  # ── Frontend (Static Site) ─────────────────────────────────────────────────
+  - type: web
+    name: enterprise-ai-frontend
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    region: oregon
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: enterprise-ai-backend
+          envVarKey: RENDER_EXTERNAL_URL
+
+databases:
+  # ── PostgreSQL Database ────────────────────────────────────────────────────
+  - name: enterprise-ai-db
+    databaseName: enterprise_ai
+    user: enterprise_ai_user
+    plan: free
+    region: oregon

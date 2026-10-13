@@ -1,0 +1,29 @@
+# Version control
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Documentation
+docs/
+*.md
+LICENSE
+
+# CI/CD
+.github/
+
+# Docker
+docker-compose*.yml
+
+# OS
+.DS_Store
+Thumbs.db

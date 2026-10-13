@@ -1,0 +1,108 @@
+.upload-zone {
+  padding: var(--space-2xl);
+  text-align: center;
+  cursor: pointer;
+  border: 2px dashed var(--border-default);
+  margin-bottom: var(--space-xl);
+  transition: all var(--transition-fast);
+}
+
+.upload-zone:hover,
+.upload-zone.drag-active {
+  border-color: var(--accent-primary);
+  background: var(--accent-glow);
+}
+
+.upload-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-md);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-xl);
+  color: var(--accent-secondary);
+}
+
+.upload-zone h3 {
+  font-size: var(--font-size-md);
+  margin-bottom: var(--space-xs);
+}
+
+.doc-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.doc-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+}
+
+.doc-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--info-bg);
+  color: var(--info);
+  border-radius: var(--radius-lg);
+  flex-shrink: 0;
+}
+
+.doc-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.doc-name {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.doc-meta {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}
+
+.doc-meta span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.doc-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.status-completed { color: var(--success); }
+.status-processing { color: var(--info); }
+.status-failed { color: var(--error); }
+.status-pending { color: var(--text-tertiary); }
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl);
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+.empty-state h3 {
+  color: var(--text-secondary);
+}

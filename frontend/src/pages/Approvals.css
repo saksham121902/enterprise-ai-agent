@@ -1,0 +1,225 @@
+/* ── Approvals Page Styles ─────────────────────────────────────────── */
+
+.approval-tabs {
+  display: flex;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xl);
+  padding: var(--space-xs);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  width: fit-content;
+}
+
+.approval-tab {
+  padding: var(--space-sm) var(--space-lg);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.approval-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.approval-tab.active {
+  background: var(--accent-primary);
+  color: white;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+.pending-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.approvals-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.approval-card {
+  overflow: hidden;
+}
+
+.approval-card.pending {
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.approval-summary {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.approval-summary:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.approval-icon {
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.approval-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.approval-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.approval-desc {
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-bottom: var(--space-xs);
+}
+
+.approval-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.approval-toggle {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  padding-top: 2px;
+}
+
+/* ── Expanded Detail ──────────────────────────────────────────────── */
+
+.approval-detail {
+  border-top: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.approval-payload {
+  padding: var(--space-lg);
+}
+
+.approval-payload h4 {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.payload-code {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  overflow-x: auto;
+  white-space: pre;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.reviewer-notes {
+  padding: 0 var(--space-lg) var(--space-lg);
+}
+
+.reviewer-notes h4 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.reviewer-notes p {
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  line-height: 1.6;
+  background: var(--bg-primary);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ── Actions ─────────────────────────────────────────────────────── */
+
+.approval-actions {
+  padding: var(--space-lg);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.notes-input-group {
+  flex: 1;
+}
+
+.action-buttons {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: flex-end;
+}
+
+.approve-btn {
+  background: var(--gradient-success) !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3) !important;
+}
+
+.approve-btn:hover {
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5) !important;
+}
+
+/* ── Status Colors ───────────────────────────────────────────────── */
+
+.status-completed {
+  color: var(--success);
+}
+
+.status-failed {
+  color: var(--error);
+}
+
+.status-pending {
+  color: var(--warning);
+}
+
+.status-processing {
+  color: var(--info);
+}
+
+@media (max-width: 640px) {
+  .approval-tabs {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}

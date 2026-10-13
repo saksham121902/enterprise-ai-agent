@@ -56,7 +56,6 @@ services:
     runtime: static
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: ./frontend/dist
-    region: oregon
     headers:
       - path: /*
         name: X-Frame-Options

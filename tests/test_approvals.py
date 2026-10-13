@@ -10,7 +10,7 @@ backend_path = repo_root / "backend"
 if str(backend_path) not in sys.path:
     sys.path.insert(0, str(backend_path))
 
-from app.core.constants import ApprovalStatus, Permission, RoleName
+from app.core.constants import ApprovalStatus, Permission
 
 
 class TestApprovalWorkflow(unittest.TestCase):

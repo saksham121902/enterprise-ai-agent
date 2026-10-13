@@ -14,16 +14,33 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from pydantic import Field, field_validator
-
 try:
-    from pydantic_settings import BaseSettings, SettingsConfigDict
+    from pydantic import BaseModel, Field, field_validator
+    try:
+        from pydantic_settings import BaseSettings, SettingsConfigDict
+    except ImportError:
+        class BaseSettings(BaseModel):  # type: ignore[no-redef]
+            """Fallback BaseSettings when pydantic-settings is not installed."""
+            model_config = {"extra": "allow"}
+
+        def SettingsConfigDict(**kwargs: Any) -> dict[str, Any]:  # type: ignore[no-redef]
+            return kwargs
 except ImportError:
-    from pydantic import BaseModel
+    class BaseModel:  # type: ignore[no-redef]
+        def __init__(self, **kwargs: Any) -> None:
+            for k, v in kwargs.items():
+                setattr(self, k, v)
 
     class BaseSettings(BaseModel):  # type: ignore[no-redef]
-        """Fallback BaseSettings when pydantic-settings is not installed."""
-        model_config = {"extra": "allow"}
+        pass
+
+    def Field(default: Any = None, **kwargs: Any) -> Any:  # type: ignore[no-redef]
+        return default
+
+    def field_validator(*args: Any, **kwargs: Any) -> Any:  # type: ignore[no-redef]
+        def decorator(fn: Any) -> Any:
+            return fn
+        return decorator
 
     def SettingsConfigDict(**kwargs: Any) -> dict[str, Any]:  # type: ignore[no-redef]
         return kwargs

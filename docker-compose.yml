@@ -43,7 +43,10 @@ services:
     environment:
       <<: *backend-env
     env_file:
-      - .env
+      - path: .env
+        required: false
+      - path: .env.example
+        required: false
     depends_on:
       postgres:
         condition: service_healthy
@@ -140,7 +143,10 @@ services:
     environment:
       <<: *backend-env
     env_file:
-      - .env
+      - path: .env
+        required: false
+      - path: .env.example
+        required: false
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -166,7 +172,10 @@ services:
     environment:
       <<: *backend-env
     env_file:
-      - .env
+      - path: .env
+        required: false
+      - path: .env.example
+        required: false
     depends_on:
       rabbitmq:
         condition: service_healthy

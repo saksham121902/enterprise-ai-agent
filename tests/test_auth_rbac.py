@@ -9,7 +9,7 @@ backend_path = repo_root / "backend"
 if str(backend_path) not in sys.path:
     sys.path.insert(0, str(backend_path))
 
-from app.core.constants import Permission, RoleName
+from app.core.constants import Permission
 from app.core.security import (
     create_access_token,
     create_refresh_token,

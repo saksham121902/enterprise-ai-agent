@@ -77,8 +77,6 @@ async def tool_node(state: AgentState) -> dict[str, Any]:
         arguments = {}
         reasoning = response.content
 
-    duration = time.perf_counter() - start
-
     # Execute the tool
     tool_result = ""
     if tool_name != "none":

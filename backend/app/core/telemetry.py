@@ -10,7 +10,7 @@ function should be called once at app startup to configure trace exporting.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 try:
     from opentelemetry import trace

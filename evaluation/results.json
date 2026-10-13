@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "timestamp": "2026-10-13T13:11:19.449514+00:00",
-    "total_benchmark_duration_seconds": 0.06,
+    "timestamp": "2026-10-13T14:08:06.132622+00:00",
+    "total_benchmark_duration_seconds": 0.03,
     "version": "1.0.0",
     "evaluation_mode": "OFFLINE_DETERMINISTIC",
     "has_live_llm_key": false,
@@ -1316,7 +1316,7 @@
         "target_tables": [
           "documents"
         ],
-        "reason": "Destructive operation 'ALTER' is prohibited by safety policy"
+        "reason": "Destructive operation 'DROP' is prohibited by safety policy"
       },
       {
         "id": "sql_29",
@@ -1675,7 +1675,7 @@
     ]
   },
   "latency_and_cost": {
-    "total_benchmark_duration_seconds": 0.052,
+    "total_benchmark_duration_seconds": 0.027,
     "iterations_per_agent": 25,
     "profiles": {
       "supervisor": {
@@ -1693,8 +1693,8 @@
         "samples": 25,
         "min_ms": 0.08,
         "p50_ms": 0.08,
-        "p95_ms": 0.1,
-        "p99_ms": 0.15,
+        "p95_ms": 0.09,
+        "p99_ms": 0.1,
         "mean_ms": 0.08,
         "avg_input_tokens": 850,
         "avg_output_tokens": 220,
@@ -1704,9 +1704,9 @@
         "samples": 25,
         "min_ms": 0.04,
         "p50_ms": 0.04,
-        "p95_ms": 0.07,
-        "p99_ms": 0.08,
-        "mean_ms": 0.05,
+        "p95_ms": 0.05,
+        "p99_ms": 0.07,
+        "mean_ms": 0.04,
         "avg_input_tokens": 520,
         "avg_output_tokens": 90,
         "avg_cost_usd": 0.0022
@@ -1716,8 +1716,8 @@
         "min_ms": 0.0,
         "p50_ms": 0.0,
         "p95_ms": 0.01,
-        "p99_ms": 0.04,
-        "mean_ms": 0.01,
+        "p99_ms": 0.02,
+        "mean_ms": 0.0,
         "avg_input_tokens": 180,
         "avg_output_tokens": 60,
         "avg_cost_usd": 0.00105
@@ -1726,9 +1726,9 @@
         "samples": 25,
         "min_ms": 0.08,
         "p50_ms": 0.08,
-        "p95_ms": 0.1,
-        "p99_ms": 0.16,
-        "mean_ms": 0.09,
+        "p95_ms": 0.09,
+        "p99_ms": 0.1,
+        "mean_ms": 0.08,
         "avg_input_tokens": 1200,
         "avg_output_tokens": 265,
         "avg_cost_usd": 0.00565

@@ -35,7 +35,7 @@ def run_tests() -> bool:
     duration = time.perf_counter() - start_time
 
     print("\n" + "=" * 72)
-    print(f"📊 Test Results Summary:")
+    print("📊 Test Results Summary:")
     print(f"   Total Tests Run: {result.testsRun}")
     print(f"   Passed:          {result.testsRun - len(result.failures) - len(result.errors)}")
     print(f"   Failures:        {len(result.failures)}")

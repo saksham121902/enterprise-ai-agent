@@ -440,7 +440,7 @@ async def seed_database() -> None:
             await session.commit()
             print("\n🎉 Database seed completed successfully!")
             print(f"   Admin: {admin_email} / admin123!")
-            print(f"   Demo:  demo@enterprise-ai.local / demo123!\n")
+            print("   Demo:  demo@enterprise-ai.local / demo123!\n")
 
         except Exception as e:
             await session.rollback()

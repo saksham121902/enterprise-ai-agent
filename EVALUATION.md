@@ -1,10 +1,10 @@
 # 📊 Hardened Benchmark Evaluation Report — Enterprise AI Operations Agent
 
 > **Automated Measurement Report**  
-> Generated on: `2026-10-13T13:11:19.449514+00:00`  
+> Generated on: `2026-10-13T14:08:06.132622+00:00`  
 > Execution Mode: `OFFLINE_DETERMINISTIC` (Live LLM Key Active: `False`)  
 > Total Adversarial Edge Cases: `20`  
-> Total Benchmark Duration: `0.06s`  
+> Total Benchmark Duration: `0.03s`  
 > *All numbers in this report are measured by `python -m evaluation.run_all` over actual pipeline execution.*
 
 ---
@@ -21,7 +21,7 @@
 | **RAG Citation Accuracy** | **87.5%** | > 80.0% | ✅ Grounded |
 | **Key Phrase Fact Recall** | **90.8%** | > 80.0% | ✅ High Precision |
 | **End-to-End Latency (p50 / Median)** | **0.08 ms** | < 1000 ms | ✅ Low Latency |
-| **End-to-End Latency (p95)** | **0.1 ms** | < 2500 ms | ✅ Production Grade |
+| **End-to-End Latency (p95)** | **0.09 ms** | < 2500 ms | ✅ Production Grade |
 | **Average Cost per Query** | **$0.00565** | < $0.01 | ✅ Ultra Cost Efficient |
 
 ---
@@ -107,10 +107,10 @@ Measured across 25 iterations per node:
 | Node / Pipeline | Min Latency | p50 (Median) | p95 Latency | p99 Latency | Mean | Avg Cost / Query |
 |---|---|---|---|---|---|---|
 | **Supervisor Node** | 0.0 ms | **0.0 ms** | 0.0 ms | 0.01 ms | 0.0 ms | $0.001325 |
-| **RAG Agent** | 0.08 ms | **0.08 ms** | 0.1 ms | 0.15 ms | 0.08 ms | $0.004325 |
-| **SQL Agent** | 0.04 ms | **0.04 ms** | 0.07 ms | 0.08 ms | 0.05 ms | $0.0022 |
-| **Tool Agent** | 0.0 ms | **0.0 ms** | 0.01 ms | 0.04 ms | 0.01 ms | $0.00105 |
-| **End-to-End Pipeline** | 0.08 ms | **0.08 ms** | **0.1 ms** | 0.16 ms | 0.09 ms | **$0.00565** |
+| **RAG Agent** | 0.08 ms | **0.08 ms** | 0.09 ms | 0.1 ms | 0.08 ms | $0.004325 |
+| **SQL Agent** | 0.04 ms | **0.04 ms** | 0.05 ms | 0.07 ms | 0.04 ms | $0.0022 |
+| **Tool Agent** | 0.0 ms | **0.0 ms** | 0.01 ms | 0.02 ms | 0.0 ms | $0.00105 |
+| **End-to-End Pipeline** | 0.08 ms | **0.08 ms** | **0.09 ms** | 0.1 ms | 0.08 ms | **$0.00565** |
 
 ---
 

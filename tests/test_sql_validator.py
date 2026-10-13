@@ -11,7 +11,6 @@ if str(backend_path) not in sys.path:
     sys.path.insert(0, str(backend_path))
 
 from app.agents.sql_validator import (
-    ALLOWED_TABLES,
     validate_sql_safety,
 )
 

@@ -1,6 +1,6 @@
 # Enterprise AI Operations Agent
 
-[![CI Pipeline](https://github.com/saksham-upes/enterprise-ai-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/saksham-upes/enterprise-ai-agent)
+[![CI Pipeline](https://github.com/saksham121902/enterprise-ai-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/saksham121902/enterprise-ai-agent)
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com)
 [![LangGraph](https://img.shields.io/badge/LangGraph-0.2.45+-orange.svg)](https://langchain-ai.github.io/langgraph/)
@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 🌐 **Live Demo Application:** [https://enterprise-ai-agent.onrender.com](https://enterprise-ai-agent.onrender.com)  
-📂 **Source Code Repository:** [https://github.com/saksham-upes/enterprise-ai-agent](https://github.com/saksham-upes/enterprise-ai-agent)  
+📂 **Source Code Repository:** [https://github.com/saksham121902/enterprise-ai-agent](https://github.com/saksham121902/enterprise-ai-agent)  
 🔑 **Demo Credentials:** 1-Click Login enabled (`admin@enterprise-ai.local` / `admin123!`)
 
 A production-grade, multi-tenant AI operations platform featuring hierarchical multi-agent orchestration (LangGraph), grounded RAG over enterprise documentation (ChromaDB), natural language to SQL with AST-based security validation, long-term memory, human-in-the-loop approval workflows, and an adversarial evaluation benchmark.
@@ -23,7 +23,7 @@ The platform includes a **1-Click Demo Login** and a **Deployable "Lite" Mode** 
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/saksham-upes/enterprise-ai-agent.git
+git clone https://github.com/saksham121902/enterprise-ai-agent.git
 cd enterprise-ai-agent
 
 # 2. Configure environment (pre-populated with working defaults)

@@ -23,10 +23,16 @@ class GoogleProvider(BaseLLMProvider):
     def _configure(self) -> None:
         """Configure the Google Generative AI SDK with API key."""
         if not self._configured:
+            import os
             import google.generativeai as genai
 
             settings = get_settings()
-            genai.configure(api_key=settings.google_api_key)
+            api_key = (
+                settings.google_api_key
+                or os.getenv("GEMINI_API_KEY", "")
+                or os.getenv("GOOGLE_API_KEY", "")
+            )
+            genai.configure(api_key=api_key)
             self._configured = True
 
     async def generate(

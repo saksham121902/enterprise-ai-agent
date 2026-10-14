@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Server, CheckCircle2, AlertCircle, RefreshCw, Settings, Database, ExternalLink } from 'lucide-react';
+import { Server, CheckCircle2, AlertCircle, RefreshCw, Settings, Database } from 'lucide-react';
 import { getApiBaseUrl, getCleanBackendRoot, setCustomApiUrl } from '../lib/api';
 import toast from 'react-hot-toast';
 import './BackendStatus.css';
 
 export function BackendStatusWidget() {
-  const [currentUrl, setCurrentUrl] = useState(getApiBaseUrl());
   const [cleanRoot, setCleanRoot] = useState(getCleanBackendRoot());
   const [status, setStatus] = useState<'idle' | 'checking' | 'waking' | 'online' | 'offline'>('idle');
   const [statusText, setStatusText] = useState<string>('');
@@ -17,7 +16,7 @@ export function BackendStatusWidget() {
 
   // Check health on initial mount
   useEffect(() => {
-    checkHealth(false);
+    void checkHealth(false);
   }, []);
 
   const checkHealth = async (notify = true) => {
@@ -47,7 +46,7 @@ export function BackendStatusWidget() {
     }
   };
 
-  const handleWakeUp = async () => {
+  const handleWakeUp = () => {
     setStatus('waking');
     const totalSeconds = 55;
     setWakeCountdown(totalSeconds);
@@ -55,29 +54,31 @@ export function BackendStatusWidget() {
     const root = getCleanBackendRoot();
     let secondsLeft = totalSeconds;
 
-    const interval = setInterval(async () => {
-      secondsLeft -= 3;
-      setWakeCountdown(Math.max(0, secondsLeft));
+    const interval = window.setInterval(() => {
+      void (async () => {
+        secondsLeft -= 3;
+        setWakeCountdown(Math.max(0, secondsLeft));
 
-      try {
-        const res = await axios.get(`${root}/health`, { timeout: 3500 });
-        if (res.status === 200) {
-          clearInterval(interval);
-          setStatus('online');
-          setStatusText('Backend is now awake and ready!');
-          toast.success('Backend woke up successfully! You can now log in.');
-          return;
+        try {
+          const res = await axios.get(`${root}/health`, { timeout: 3500 });
+          if (res.status === 200) {
+            window.clearInterval(interval);
+            setStatus('online');
+            setStatusText('Backend is now awake and ready!');
+            toast.success('Backend woke up successfully! You can now log in.');
+            return;
+          }
+        } catch {
+          // Keep waiting until countdown expires
         }
-      } catch {
-        // Keep waiting until countdown expires
-      }
 
-      if (secondsLeft <= 0) {
-        clearInterval(interval);
-        setStatus('offline');
-        setStatusText('Wake-up timed out. Check Render dashboard logs.');
-        toast.error('Backend did not respond in time. Please check your Render dashboard.');
-      }
+        if (secondsLeft <= 0) {
+          window.clearInterval(interval);
+          setStatus('offline');
+          setStatusText('Wake-up timed out. Check Render dashboard logs.');
+          toast.error('Backend did not respond in time. Please check your Render dashboard.');
+        }
+      })();
     }, 3000);
   };
 
@@ -93,11 +94,9 @@ export function BackendStatusWidget() {
       setCustomApiUrl(clean);
       toast.success('Custom backend URL saved!');
     }
-    const updated = getApiBaseUrl();
-    setCurrentUrl(updated);
     setCleanRoot(getCleanBackendRoot());
     setShowConfig(false);
-    setTimeout(() => checkHealth(true), 200);
+    setTimeout(() => { void checkHealth(true); }, 200);
   };
 
   const handleSeedDatabase = async () => {
@@ -222,7 +221,6 @@ export function BackendStatusWidget() {
               className="btn btn-ghost btn-xs text-muted"
               onClick={() => {
                 setCustomApiUrl(null);
-                setCurrentUrl(getApiBaseUrl());
                 setCleanRoot(getCleanBackendRoot());
                 setInputUrl('');
                 toast.success('Reset to auto-detected URL');

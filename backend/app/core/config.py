@@ -248,6 +248,22 @@ class Settings(BaseSettings):
             return [item.strip() for item in v.split(",") if item.strip()]
         return v  # type: ignore[return-value]
 
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def normalize_database_url(cls, v: Any) -> str:
+        """Normalize database URL for SQLAlchemy asyncpg driver.
+
+        Render (and other PaaS) provide ``postgres://`` URLs, but
+        SQLAlchemy's asyncpg driver requires ``postgresql+asyncpg://``.
+        """
+        if isinstance(v, str):
+            v = v.strip()
+            if v.startswith("postgres://"):
+                v = v.replace("postgres://", "postgresql+asyncpg://", 1)
+            elif v.startswith("postgresql://"):
+                v = v.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return v
+
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:

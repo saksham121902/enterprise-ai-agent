@@ -89,6 +89,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         os.environ["LANGCHAIN_TRACING_V2"] = "true"
         os.environ["LANGCHAIN_API_KEY"] = settings.langsmith_api_key
         os.environ["LANGCHAIN_PROJECT"] = settings.langsmith_project
+        logger.info("LangSmith tracing enabled", project=settings.langsmith_project)
+
     # Auto-seed database in demo/lite mode on startup (vital for platforms without shell access like Render free tier)
     if settings.demo_mode or settings.lite_mode:
         try:

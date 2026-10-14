@@ -17,14 +17,11 @@ export function getApiBaseUrl(): string {
     return trimmed.endsWith('/api/v1') ? trimmed : `${trimmed}/api/v1`;
   }
 
-  // 3. Dynamic browser location check for cloud platforms (e.g. Render)
+  // 3. Known deployed cloud backend fallback (Render)
   if (typeof window !== 'undefined' && window.location) {
-    const { hostname, protocol } = window.location;
+    const { hostname } = window.location;
     if (hostname.includes('onrender.com')) {
-      // Replaces 'frontend' with 'backend' in Render slug
-      // e.g. enterprise-ai-frontend.onrender.com -> enterprise-ai-backend.onrender.com
-      const backendHostname = hostname.replace('frontend', 'backend');
-      return `${protocol}//${backendHostname}/api/v1`;
+      return 'https://enterprise-ai-backend-uwkc.onrender.com/api/v1';
     }
   }
 

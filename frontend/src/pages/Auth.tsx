@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Bot, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { authApi } from '../lib/api';
 import { useAuthStore } from '../stores';
+import { BackendStatusWidget } from '../components/BackendStatus';
 import toast from 'react-hot-toast';
 import './Auth.css';
 
@@ -15,6 +16,23 @@ export function LoginPage() {
   const { login: authLogin } = useAuthStore();
   const navigate = useNavigate();
 
+  const handleAuthError = (err: any, fallback: string) => {
+    console.error('Auth error:', err);
+    let msg = fallback;
+    if (err.response?.data?.error?.message) {
+      msg = err.response.data.error.message;
+    } else if (err.response?.data?.detail) {
+      msg = typeof err.response.data.detail === 'string'
+        ? err.response.data.detail
+        : JSON.stringify(err.response.data.detail);
+    } else if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+      msg = 'Cannot reach backend server. It may still be deploying or sleeping on Render free tier. Use "Wake Server" or check URL below.';
+    } else if (err.message) {
+      msg = err.message;
+    }
+    toast.error(msg, { duration: 6000 });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -24,7 +42,7 @@ export function LoginPage() {
       toast.success('Welcome back!');
       navigate('/');
     } catch (err: any) {
-      toast.error(err.response?.data?.error?.message || 'Login failed');
+      handleAuthError(err, 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -40,7 +58,7 @@ export function LoginPage() {
       toast.success('Signed in successfully!');
       navigate('/');
     } catch (err: any) {
-      toast.error(err.response?.data?.error?.message || 'Login failed');
+      handleAuthError(err, 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -92,6 +110,9 @@ export function LoginPage() {
             </button>
           </div>
         </div>
+
+        {/* Backend Connectivity & Wake-up Widget */}
+        <BackendStatusWidget />
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
@@ -158,7 +179,20 @@ export function RegisterPage() {
       toast.success('Account created!');
       navigate('/');
     } catch (err: any) {
-      toast.error(err.response?.data?.error?.message || 'Registration failed');
+      console.error('Registration error:', err);
+      let msg = 'Registration failed';
+      if (err.response?.data?.error?.message) {
+        msg = err.response.data.error.message;
+      } else if (err.response?.data?.detail) {
+        msg = typeof err.response.data.detail === 'string'
+          ? err.response.data.detail
+          : JSON.stringify(err.response.data.detail);
+      } else if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+        msg = 'Cannot connect to backend server. Render free instance may be sleeping. Check backend status below.';
+      } else if (err.message) {
+        msg = err.message;
+      }
+      toast.error(msg, { duration: 6000 });
     } finally {
       setLoading(false);
     }

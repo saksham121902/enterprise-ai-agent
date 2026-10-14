@@ -1,14 +1,23 @@
 import axios from 'axios';
 
-function getApiBaseUrl(): string {
-  // 1. Explicit environment variable check (Vite build-time env)
+export function getApiBaseUrl(): string {
+  // 1. User manual override stored in localStorage
+  if (typeof window !== 'undefined' && window.localStorage) {
+    const customUrl = localStorage.getItem('custom_api_url');
+    if (customUrl && customUrl.trim() !== '') {
+      const trimmed = customUrl.trim().replace(/\/+$/, '');
+      return trimmed.endsWith('/api/v1') ? trimmed : `${trimmed}/api/v1`;
+    }
+  }
+
+  // 2. Explicit environment variable check (Vite build-time env)
   const envUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
   if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
     const trimmed = envUrl.trim().replace(/\/+$/, '');
     return trimmed.endsWith('/api/v1') ? trimmed : `${trimmed}/api/v1`;
   }
 
-  // 2. Dynamic browser location check for cloud platforms (e.g. Render)
+  // 3. Dynamic browser location check for cloud platforms (e.g. Render)
   if (typeof window !== 'undefined' && window.location) {
     const { hostname, protocol } = window.location;
     if (hostname.includes('onrender.com')) {
@@ -19,8 +28,23 @@ function getApiBaseUrl(): string {
     }
   }
 
-  // 3. Localhost fallback for local development
+  // 4. Localhost fallback for local development
   return 'http://localhost:8000/api/v1';
+}
+
+export function setCustomApiUrl(url: string | null): void {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    if (!url || url.trim() === '') {
+      localStorage.removeItem('custom_api_url');
+    } else {
+      localStorage.setItem('custom_api_url', url.trim());
+    }
+  }
+}
+
+export function getCleanBackendRoot(): string {
+  const base = getApiBaseUrl();
+  return base.replace(/\/api\/v1\/?$/, '');
 }
 
 const API_BASE = getApiBaseUrl();
@@ -30,8 +54,9 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Attach JWT token to every request
+// Update baseURL dynamically on every request in case custom_api_url changed
 api.interceptors.request.use((config) => {
+  config.baseURL = getApiBaseUrl();
   const token = localStorage.getItem('access_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

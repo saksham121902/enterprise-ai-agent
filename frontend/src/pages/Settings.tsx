@@ -300,6 +300,17 @@ function AppearanceTab() {
 
       <div className="appearance-options glass-card">
         <div className="appearance-option active">
+          <div className="theme-preview light">
+            <div className="tp-sidebar" />
+            <div className="tp-main">
+              <div className="tp-line" />
+              <div className="tp-line short" />
+            </div>
+          </div>
+          <span>Light Mode (Active)</span>
+          <Check size={16} className="check-icon" />
+        </div>
+        <div className="appearance-option disabled">
           <div className="theme-preview dark">
             <div className="tp-sidebar" />
             <div className="tp-main">
@@ -308,18 +319,6 @@ function AppearanceTab() {
             </div>
           </div>
           <span>Dark Mode</span>
-          <Check size={16} className="check-icon" />
-        </div>
-        <div className="appearance-option disabled">
-          <div className="theme-preview light">
-            <div className="tp-sidebar" />
-            <div className="tp-main">
-              <div className="tp-line" />
-              <div className="tp-line short" />
-            </div>
-          </div>
-          <span>Light Mode</span>
-          <span className="badge badge-neutral">Soon</span>
         </div>
       </div>
     </motion.div>

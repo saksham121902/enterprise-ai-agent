@@ -1,52 +1,52 @@
 :root {
-  /* ── Color Palette (Dark Mode First) ─────────────────────────────── */
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #12121a;
-  --bg-tertiary: #1a1a2e;
-  --bg-elevated: #1e1e32;
-  --bg-hover: #252540;
-  --bg-active: #2d2d4a;
+  /* ── Color Palette (Modern White Dashboard Theme) ─────────────────── */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-elevated: #ffffff;
+  --bg-hover: #f1f5f9;
+  --bg-active: #e2e8f0;
 
   /* Glass effect backgrounds */
-  --glass-bg: rgba(30, 30, 50, 0.7);
-  --glass-border: rgba(100, 100, 180, 0.15);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-border: rgba(226, 232, 240, 0.9);
+  --glass-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
 
   /* Text colors */
-  --text-primary: #e8e8f0;
-  --text-secondary: #9898b0;
-  --text-tertiary: #686880;
-  --text-inverse: #0a0a0f;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --text-inverse: #ffffff;
 
-  /* Accent palette — electric purple/blue gradient */
-  --accent-primary: #7c3aed;
-  --accent-secondary: #a855f7;
-  --accent-light: #c084fc;
-  --accent-glow: rgba(124, 58, 237, 0.25);
+  /* Accent palette — electric indigo & violet */
+  --accent-primary: #6366f1;
+  --accent-secondary: #7c3aed;
+  --accent-light: #4f46e5;
+  --accent-glow: rgba(99, 102, 241, 0.14);
 
   /* Status colors */
-  --success: #10b981;
+  --success: #059669;
   --success-bg: rgba(16, 185, 129, 0.1);
-  --warning: #f59e0b;
+  --warning: #d97706;
   --warning-bg: rgba(245, 158, 11, 0.1);
-  --error: #ef4444;
+  --error: #dc2626;
   --error-bg: rgba(239, 68, 68, 0.1);
-  --info: #3b82f6;
+  --info: #2563eb;
   --info-bg: rgba(59, 130, 246, 0.1);
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #7c3aed, #3b82f6);
-  --gradient-accent: linear-gradient(135deg, #a855f7, #6366f1);
-  --gradient-success: linear-gradient(135deg, #10b981, #059669);
-  --gradient-warm: linear-gradient(135deg, #f59e0b, #ef4444);
-  --gradient-sidebar: linear-gradient(180deg, #0f0f18, #0a0a12);
-  --gradient-card: linear-gradient(145deg, rgba(30, 30, 50, 0.6), rgba(20, 20, 40, 0.4));
+  --gradient-primary: linear-gradient(135deg, #6366f1, #7c3aed);
+  --gradient-accent: linear-gradient(135deg, #7c3aed, #a855f7);
+  --gradient-success: linear-gradient(135deg, #059669, #10b981);
+  --gradient-warm: linear-gradient(135deg, #d97706, #ef4444);
+  --gradient-sidebar: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  --gradient-card: linear-gradient(145deg, #ffffff 0%, #fcfdfe 100%);
 
   /* Borders */
-  --border-subtle: rgba(100, 100, 180, 0.1);
-  --border-default: rgba(100, 100, 180, 0.2);
-  --border-strong: rgba(100, 100, 180, 0.3);
-  --border-accent: rgba(124, 58, 237, 0.4);
+  --border-subtle: #f1f5f9;
+  --border-default: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-accent: rgba(99, 102, 241, 0.4);
 
   /* Spacing */
   --space-xs: 0.25rem;
@@ -65,10 +65,10 @@
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(124, 58, 237, 0.3);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
 
   /* Typography */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -131,12 +131,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--text-tertiary);
+  background: #cbd5e1;
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  background: #94a3b8;
 }
 
 /* ── Typography ─────────────────────────────────────────────────────── */
@@ -557,7 +557,7 @@ a:hover {
 }
 
 .data-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-hover);
 }
 
 .data-table .cost-cell {

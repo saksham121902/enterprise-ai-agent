@@ -18,7 +18,7 @@
   position: absolute;
   border-radius: 50%;
   filter: blur(100px);
-  opacity: 0.3;
+  opacity: 0.12;
 }
 
 .orb-1 {
@@ -169,13 +169,15 @@
   font-size: var(--font-size-xs);
   padding: var(--space-xs) var(--space-sm);
   white-space: nowrap;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
   transition: all var(--transition-fast);
 }
 
 .demo-btn:hover:not(:disabled) {
-  background: rgba(99, 102, 241, 0.2);
-  border-color: var(--accent-secondary);
+  background: rgba(99, 102, 241, 0.08);
+  border-color: var(--accent-primary);
   transform: translateY(-1px);
 }

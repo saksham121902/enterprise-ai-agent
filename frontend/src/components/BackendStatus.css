@@ -2,8 +2,8 @@
   margin-top: var(--space-md);
   margin-bottom: var(--space-md);
   padding: 10px 14px;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
   font-size: var(--font-size-xs);
   transition: all var(--transition-normal);
@@ -129,8 +129,8 @@
 }
 
 .btn-icon-toggle {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
   color: var(--text-tertiary);
   cursor: pointer;
   border-radius: 4px;
@@ -143,7 +143,7 @@
 
 .btn-icon-toggle:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--bg-hover);
 }
 
 .status-note {
@@ -156,18 +156,18 @@
 }
 
 .status-note.offline {
-  color: #f87171;
+  color: #dc2626;
 }
 
 .status-note.checking,
 .status-note.waking {
-  color: #fbbf24;
+  color: #d97706;
 }
 
 .backend-config-drawer {
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  border-top: 1px dashed var(--border-default);
   display: flex;
   flex-direction: column;
   gap: 8px;

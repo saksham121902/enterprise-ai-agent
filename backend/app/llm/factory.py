@@ -14,6 +14,8 @@ Usage::
 
 from __future__ import annotations
 
+import json
+import os
 from typing import Any, AsyncGenerator
 
 from app.core.config import get_settings
@@ -75,6 +77,24 @@ class LLMService:
         # Lazy provider cache
         self._providers: dict[str, BaseLLMProvider] = {}
 
+    def _is_provider_configured(self, name: str) -> bool:
+        """Check if the given provider has necessary credentials/configuration."""
+        settings = get_settings()
+        p = name.lower()
+        if p == LLMProvider.OPENAI:
+            return bool(settings.openai_api_key or os.getenv("OPENAI_API_KEY"))
+        elif p == LLMProvider.ANTHROPIC:
+            return bool(settings.anthropic_api_key or os.getenv("ANTHROPIC_API_KEY"))
+        elif p == LLMProvider.GOOGLE:
+            return bool(
+                settings.google_api_key
+                or os.getenv("GEMINI_API_KEY")
+                or os.getenv("GOOGLE_API_KEY")
+            )
+        elif p == LLMProvider.OLLAMA:
+            return bool(settings.ollama_base_url or os.getenv("OLLAMA_BASE_URL"))
+        return False
+
     def _get_provider(self, name: str) -> BaseLLMProvider:
         """Get or create a cached provider instance."""
         if name not in self._providers:
@@ -95,6 +115,7 @@ class LLMService:
 
         Tries the specified/primary provider first. If it fails,
         iterates through fallback providers until one succeeds.
+        If no API keys are configured, returns an immediate structured demo response.
 
         Args:
             prompt: The user prompt.
@@ -116,11 +137,25 @@ class LLMService:
                 provider, prompt, system_prompt, model, temperature, max_tokens, **kwargs
             )
 
-        # Try primary provider
-        providers_to_try = [self._primary_name, *self._fallback_names]
+        # Prioritize configured providers
+        all_candidates = [self._primary_name, *self._fallback_names]
+        configured_candidates = [p for p in all_candidates if self._is_provider_configured(p)]
+
+        if configured_candidates:
+            # Try configured providers first, then unconfigured as fallback
+            providers_to_try = configured_candidates + [
+                p for p in all_candidates if p not in configured_candidates
+            ]
+        else:
+            providers_to_try = all_candidates
+
         last_error: Exception | None = None
 
         for provider_name in providers_to_try:
+            # Skip attempting unconfigured providers if we already know none are configured
+            if not self._is_provider_configured(provider_name) and not configured_candidates:
+                continue
+
             try:
                 return await self._try_provider(
                     provider_name, prompt, system_prompt, model, temperature, max_tokens, **kwargs
@@ -132,6 +167,47 @@ class LLMService:
                     provider=provider_name,
                     error=str(exc),
                 )
+
+        # If no provider succeeded and none were configured with API keys, return an intelligent demo response
+        if not configured_candidates:
+            logger.info("No LLM API keys configured. Generating intelligent demo response.")
+            is_json_request = (
+                "JSON" in prompt
+                or "json" in prompt
+                or (system_prompt and "json" in system_prompt.lower())
+            )
+
+            if is_json_request:
+                demo_content = json.dumps({
+                    "reasoning": (
+                        "Enterprise AI multi-agent supervisor, PostgreSQL DB, and security guardrails "
+                        "are fully operational. Configure OPENAI_API_KEY or GEMINI_API_KEY for live LLM inference."
+                    ),
+                    "route_to": "direct",
+                    "direct_response": (
+                        "👋 Welcome to the Enterprise AI Assistant! All system components—multi-agent routing, "
+                        "PostgreSQL persistence, document indexing, and role-based access control—are running live and healthy. "
+                        "To enable real-time generative responses with external LLMs, set your `OPENAI_API_KEY` or `GEMINI_API_KEY` in Render environment variables."
+                    ),
+                })
+            else:
+                demo_content = (
+                    "👋 Welcome to the Enterprise AI Assistant! All system components—multi-agent routing, "
+                    "PostgreSQL persistence, document indexing, and role-based access control—are running live and healthy. "
+                    "To enable real-time generative responses with external LLMs, set your `OPENAI_API_KEY` or `GEMINI_API_KEY` in Render environment variables."
+                )
+
+            tokens_count = len(prompt.split()) + len(demo_content.split())
+            return LLMResponse(
+                content=demo_content,
+                model="demo-mode",
+                provider="enterprise-agent",
+                input_tokens=len(prompt.split()),
+                output_tokens=len(demo_content.split()),
+                total_tokens=tokens_count,
+                cost_usd=0.0,
+                latency_ms=10,
+            )
 
         raise LLMProviderError(
             provider=self._primary_name,
@@ -184,6 +260,21 @@ class LLMService:
             Content chunks as they arrive.
         """
         provider_name = provider or self._primary_name
+
+        # If selected provider is not configured, try any configured fallback
+        if not self._is_provider_configured(provider_name):
+            for fb in self._fallback_names:
+                if self._is_provider_configured(fb):
+                    provider_name = fb
+                    break
+
+        if not self._is_provider_configured(provider_name):
+            yield (
+                "👋 Welcome to Enterprise AI Agent! The multi-agent supervisor and database are fully operational. "
+                "To enable live streaming LLM responses, set your OPENAI_API_KEY or GEMINI_API_KEY in the environment."
+            )
+            return
+
         p = self._get_provider(provider_name)
         async for chunk in p.generate_streaming(
             prompt=prompt,

@@ -89,7 +89,16 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         os.environ["LANGCHAIN_TRACING_V2"] = "true"
         os.environ["LANGCHAIN_API_KEY"] = settings.langsmith_api_key
         os.environ["LANGCHAIN_PROJECT"] = settings.langsmith_project
-        logger.info("LangSmith tracing enabled", project=settings.langsmith_project)
+    # Auto-seed database in demo/lite mode on startup (vital for platforms without shell access like Render free tier)
+    if settings.demo_mode or settings.lite_mode:
+        try:
+            from app.seed import seed_database
+
+            logger.info("Auto-seeding demo database on startup...")
+            await seed_database()
+            logger.info("Demo database auto-seeding completed")
+        except Exception as exc:
+            logger.warning("Auto-seeding skipped or already applied", error=str(exc))
 
     logger.info("Application startup complete")
 
@@ -313,6 +322,17 @@ def _register_health_routes(app: FastAPI, settings: Settings) -> None:
             "version": settings.app_version,
             "environment": settings.environment,
         }
+
+    @app.api_route("/seed", methods=["GET", "POST"], tags=["Health"], summary="Idempotent database seed endpoint")
+    async def trigger_seed_endpoint() -> dict[str, str]:
+        """Trigger database seeding on platforms without shell access."""
+        from app.seed import seed_database
+
+        try:
+            await seed_database()
+            return {"status": "success", "message": "Database seeded successfully"}
+        except Exception as exc:
+            return {"status": "error", "message": str(exc)}
 
     @app.get("/readiness", tags=["Health"], summary="Readiness probe")
     async def readiness_check() -> dict[str, object]:

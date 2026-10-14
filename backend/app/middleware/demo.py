@@ -45,9 +45,9 @@ class DemoRateLimitMiddleware(BaseHTTPMiddleware):
         if not settings.demo_mode:
             return await call_next(request)
 
-        # Skip rate limiting for health/metrics/static
+        # Skip rate limiting for health/metrics/static/seed
         path = request.url.path
-        if path in {"/health", "/readiness", "/metrics"} or path.startswith("/assets"):
+        if path in {"/health", "/readiness", "/metrics", "/seed"} or path.startswith("/assets"):
             return await call_next(request)
 
         # Get client IP

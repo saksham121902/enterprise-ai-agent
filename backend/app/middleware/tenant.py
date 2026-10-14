@@ -24,6 +24,7 @@ TENANT_EXEMPT_PATHS: frozenset[str] = frozenset({
     "/health",
     "/readiness",
     "/metrics",
+    "/seed",
 })
 
 

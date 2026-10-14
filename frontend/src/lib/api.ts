@@ -1,6 +1,29 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+function getApiBaseUrl(): string {
+  // 1. Explicit environment variable check (Vite build-time env)
+  const envUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
+  if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
+    const trimmed = envUrl.trim().replace(/\/+$/, '');
+    return trimmed.endsWith('/api/v1') ? trimmed : `${trimmed}/api/v1`;
+  }
+
+  // 2. Dynamic browser location check for cloud platforms (e.g. Render)
+  if (typeof window !== 'undefined' && window.location) {
+    const { hostname, protocol } = window.location;
+    if (hostname.includes('onrender.com')) {
+      // Replaces 'frontend' with 'backend' in Render slug
+      // e.g. enterprise-ai-frontend.onrender.com -> enterprise-ai-backend.onrender.com
+      const backendHostname = hostname.replace('frontend', 'backend');
+      return `${protocol}//${backendHostname}/api/v1`;
+    }
+  }
+
+  // 3. Localhost fallback for local development
+  return 'http://localhost:8000/api/v1';
+}
+
+const API_BASE = getApiBaseUrl();
 
 const api = axios.create({
   baseURL: API_BASE,

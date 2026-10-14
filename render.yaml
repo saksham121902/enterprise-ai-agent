@@ -67,6 +67,11 @@ services:
         source: /*
         destination: /index.html
     envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: enterprise-ai-backend
+          envVarKey: RENDER_EXTERNAL_URL
       - key: VITE_API_BASE_URL
         fromService:
           type: web

@@ -19,8 +19,10 @@ class TestLLMFactory(unittest.TestCase):
 
     def test_provider_configuration_detection(self):
         """Test _is_provider_configured accurately checks settings & environment."""
-        with patch.dict("os.environ", {}, clear=True):
-            with patch("app.llm.factory.get_settings") as mock_settings:
+        with (
+            patch.dict("os.environ", {}, clear=True),
+            patch("app.llm.factory.get_settings") as mock_settings,
+        ):
                 mock_settings.return_value.openai_api_key = ""
                 mock_settings.return_value.anthropic_api_key = ""
                 mock_settings.return_value.google_api_key = ""

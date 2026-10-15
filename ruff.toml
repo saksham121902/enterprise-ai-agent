@@ -1,0 +1,25 @@
+target-version = "py312"
+line-length = 100
+
+[lint]
+select = [
+    "E9",   # syntax errors
+    "F63",  # invalid syntax
+    "F7",   # undefined names
+    "F82",  # undefined variables
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+]
+ignore = [
+    "E501",   # line length
+    "E402",   # module level import not at top of file
+    "F401",   # unused imports
+    "F841",   # local variable unused
+    "S101",   # assert usage (allowed in tests)
+    "COM812", # trailing comma (conflicts with formatter)
+    "ISC001", # implicit string concat (conflicts with formatter)
+    "B008",   # function call in default argument (used by FastAPI Depends)
+]
+
+[lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "ARG001", "ARG002", "BLE001"]

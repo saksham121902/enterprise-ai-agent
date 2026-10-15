@@ -11,12 +11,14 @@ Runs automated live tests against the production deployment on Render:
 - Tests Analytics and token metrics
 """
 
+from __future__ import annotations
+
 import json
 import ssl
 import sys
-import time
 import urllib.error
 import urllib.request
+from typing import Any
 
 ctx = ssl.create_default_context()
 FRONTEND_URL = "https://enterprise-ai-frontend-1um8.onrender.com"
@@ -24,7 +26,13 @@ BACKEND_URL = "https://enterprise-ai-backend-uwkc.onrender.com"
 API_URL = f"{BACKEND_URL}/api/v1"
 
 
-def api_call(endpoint: str, method: str = "GET", payload: dict = None, token: str = None, timeout: int = 20):
+def api_call(
+    endpoint: str,
+    method: str = "GET",
+    payload: dict[str, Any] | None = None,
+    token: str | None = None,
+    timeout: int = 20,
+) -> tuple[int, Any]:
     url = f"{API_URL}{endpoint}" if endpoint.startswith("/") else endpoint
     headers = {"Content-Type": "application/json"}
     if token:
@@ -37,21 +45,21 @@ def api_call(endpoint: str, method: str = "GET", payload: dict = None, token: st
             body = resp.read().decode("utf-8")
             try:
                 parsed = json.loads(body)
-            except Exception:
+            except json.JSONDecodeError:
                 parsed = body
             return resp.getcode(), parsed
     except urllib.error.HTTPError as e:
         body = e.read().decode("utf-8")
         try:
             parsed = json.loads(body)
-        except Exception:
+        except json.JSONDecodeError:
             parsed = body
         return e.code, parsed
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         return 0, str(e)
 
 
-def run_e2e_tests():
+def run_e2e_tests() -> bool:
     print("=" * 75)
     print("🚀 ENTERPRISE AI AGENT — LIVE APPLICATION INTEGRATION TESTS")
     print(f"Target Frontend: {FRONTEND_URL}")
@@ -61,7 +69,7 @@ def run_e2e_tests():
     tests_run = 0
     tests_passed = 0
 
-    def check(name: str, passed: bool, details: str = ""):
+    def check(name: str, passed: bool, details: str = "") -> bool:
         nonlocal tests_run, tests_passed
         tests_run += 1
         if passed:
@@ -80,7 +88,7 @@ def run_e2e_tests():
             check("Frontend HTTP 200 Status", r.getcode() == 200, f"(code {r.getcode()})")
             check("Frontend HTML Root Element", '<div id="root">' in html or "root" in html, "(React mount point found)")
             check("Frontend Modern Scripts Loaded", 'type="module"' in html or '<script' in html, "(Vite bundle script present)")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         check("Frontend Delivery", False, f"Error: {e}")
 
     # 2. Health & Readiness
@@ -109,7 +117,7 @@ def run_e2e_tests():
     check("Demo User Login", code == 200 and bool(demo_token), f"Role: {demo_auth.get('user', {}).get('role_name')}")
 
     # Invalid login rejection
-    code, inv = api_call("/auth/login", "POST", {"login": "hacker@bad.com", "password": "wrongpassword"})
+    code, _inv = api_call("/auth/login", "POST", {"login": "hacker@bad.com", "password": "wrongpassword"})
     check("Unauthorized Login Rejection", code in (400, 401), f"Correctly rejected with HTTP {code}")
 
     # 4. Multi-Agent Chat Sessions
@@ -118,11 +126,11 @@ def run_e2e_tests():
     check("List Chat Sessions (/chat/)", code == 200 and isinstance(chats, list), f"{len(chats) if isinstance(chats, list) else 0} session(s) active")
 
     # Send a message
-    code, msg_resp = api_call("/chat/message", "POST", {"message": "System status check and feature list request"}, token=admin_token, timeout=25)
+    code, msg_resp = api_call("/chat/message", "POST", {"message": "System status check and feature list request"}, token=admin_token, timeout=45)
     check("Agent Message Processing (/chat/message)", code == 200, f"HTTP {code} | Session: {msg_resp.get('chat_id') if isinstance(msg_resp, dict) else ''}")
     if isinstance(msg_resp, dict):
         content_preview = msg_resp.get("content", "")[:90].replace("\n", " ")
-        check("Agent Response Returned", len(content_preview) > 0, f"Preview: \"{content_preview}...\"")
+        check("Agent Response Returned", len(content_preview) > 0, f'Preview: "{content_preview}..."')
 
     # 5. Knowledge Base (RAG Documents)
     print("\n--- 5. Enterprise Document Store (RAG) ---")

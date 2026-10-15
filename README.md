@@ -7,7 +7,8 @@
 [![React 19](https://img.shields.io/badge/React-19-61dafb.svg)](https://react.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-🌐 **Live Demo Application:** [https://enterprise-ai-agent.onrender.com](https://enterprise-ai-agent.onrender.com)  
+🌐 **Live Demo Application:** [https://enterprise-ai-frontend-1um8.onrender.com](https://enterprise-ai-frontend-1um8.onrender.com)  
+🔌 **Live API & Docs:** [https://enterprise-ai-backend-uwkc.onrender.com/docs](https://enterprise-ai-backend-uwkc.onrender.com/docs)  
 📂 **Source Code Repository:** [https://github.com/saksham121902/enterprise-ai-agent](https://github.com/saksham121902/enterprise-ai-agent)  
 🔑 **Demo Credentials:** 1-Click Login enabled (`admin@enterprise-ai.local` / `admin123!`)
 
@@ -192,8 +193,11 @@ To maintain complete engineering honesty on technical resumes, here is the verif
 ## 🧪 Running Tests & Evaluation Locally
 
 ```bash
-# Run unit & security guardrail tests (29 tests)
+# Run unit & security guardrail tests (32 tests)
 python3 -m tests.run_tests
+
+# Run live end-to-end integration tests (16 tests against Render)
+python3 -m tests.test_live_e2e
 
 # Run the complete 90-case evaluation benchmark
 python3 -m evaluation.run_all
